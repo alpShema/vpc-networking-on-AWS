@@ -337,7 +337,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub ${EnvironmentName}-app-sg
-      GroupDescription: Allow ICMP from VPC only — no inbound internet access
+      GroupDescription: Allow ICMP from VPC only - no inbound internet access
       VpcId: !Ref VPC
       SecurityGroupIngress:
         # ICMP (ping) from within the VPC — for connectivity validation
@@ -432,7 +432,7 @@ Resources:
               <h1>Hello from Web Server!</h1>
               <p><strong>Name:</strong> Alphonse Shema</p>
               <p><strong>Lab:</strong> Highly Available Multi-AZ VPC Lab</p>
-              <div class="badge">AZ 1 — Public Subnet</div>
+              <div class="badge">AZ 1 - Public Subnet</div>
               <div class="badge">Apache HTTP Server</div>
               <p style="color:#666; font-size:0.9em;">Instance Region: ${AWS::Region}</p>
             </div>
@@ -481,7 +481,7 @@ Resources:
               <h1>Hello from Web Server!</h1>
               <p><strong>Name:</strong> Alphonse Shema</p>
               <p><strong>Lab:</strong> Highly Available Multi-AZ VPC Lab</p>
-              <div class="badge">AZ 2 — Public Subnet</div>
+              <div class="badge">AZ 2 - Public Subnet</div>
               <div class="badge">Apache HTTP Server</div>
               <p style="color:#666; font-size:0.9em;">Instance Region: ${AWS::Region}</p>
             </div>
