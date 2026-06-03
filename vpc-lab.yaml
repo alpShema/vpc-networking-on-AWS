@@ -79,9 +79,6 @@ Resources:
 
 
   # 2. INTERNET GATEWAY
-  #    Provides inbound/outbound internet access for public subnets.
-  #    Must be attached to the VPC after creation.
-
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -90,7 +87,7 @@ Resources:
         - Key: Name
           Value: !Sub ${EnvironmentName}-igw
 
-  # Attach the IGW to the VPC (two separate resources in CloudFormation)
+  # Attach the IGW to the VPC (
   InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -108,7 +105,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet1CIDR
-      AvailabilityZone: !Select [0, !GetAZs '']   # first AZ in the region
+      AvailabilityZone: !Select [0, !GetAZs '']   
       MapPublicIpOnLaunch: true                    # auto-assign public IP to instances
       Tags:
         - Key: Name
@@ -136,8 +133,8 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet1CIDR
-      AvailabilityZone: !Select [0, !GetAZs '']   # same AZ as PublicSubnet1
-      MapPublicIpOnLaunch: false                   # no public IPs for private instances
+      AvailabilityZone: !Select [0, !GetAZs '']   
+      MapPublicIpOnLaunch: false                   
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName}-private-subnet-az1
@@ -150,7 +147,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet2CIDR
-      AvailabilityZone: !Select [1, !GetAZs '']   # same AZ as PublicSubnet2
+      AvailabilityZone: !Select [1, !GetAZs '']   
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -161,12 +158,11 @@ Resources:
 
 
   # 4. ELASTIC IPs FOR NAT GATEWAYS
-  #    Each NAT Gateway requires a dedicated Elastic IP address.
 
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
-    DependsOn: InternetGatewayAttachment   # IGW must be attached before allocating EIP
+    DependsOn: InternetGatewayAttachment   
     Properties:
       Domain: vpc
       Tags:
@@ -185,9 +181,6 @@ Resources:
 
 
   # 5. NAT GATEWAYS — One per AZ (AZ-aligned, no cross-AZ dependency)
-  #    Placed in PUBLIC subnets. Private subnets route outbound traffic here.
-  #    Using two NAT Gateways ensures: if one AZ fails, the other AZ's
-  #    private subnet still has internet access through its own NAT Gateway.
 
 
   # NAT Gateway in AZ 1 — serves PrivateSubnet1
@@ -213,8 +206,6 @@ Resources:
 
 
   # 6. ROUTE TABLES
-  #    Public subnets share one route table pointing to the IGW.
-  #    Each private subnet has its OWN route table pointing to its AZ-local NAT.
 
 
   # --- Public Route Table ---
@@ -297,12 +288,8 @@ Resources:
 
 
   # 7. SECURITY GROUPS
-  #    Least-privilege: only allow what is explicitly needed.
-  #    NO inbound SSH (port 22) anywhere.
-
 
   # Security Group for Public Web Tier
-  # Allows: HTTP (80) from anywhere, ICMP (ping) from within VPC
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -358,11 +345,6 @@ Resources:
 
 
   # 8. IAM ROLE FOR SSM SESSION MANAGER
-  #    All EC2 instances need this role to be managed by SSM.
-  #    AmazonSSMManagedInstanceCore gives SSM the permission to connect.
-  #    No SSH keys or bastion hosts needed.
-
-
   EC2SSMRole:
     Type: AWS::IAM::Role
     Properties:
@@ -392,8 +374,6 @@ Resources:
 
 
   # 9. EC2 INSTANCES — PUBLIC WEB TIER (2 instances, one per AZ)
-  #    Apache is installed via UserData at launch time.
-  #    The webpage displays your name and lab name.
 
 
   # Web Server — AZ 1
@@ -497,12 +477,7 @@ Resources:
           Value: AZ2
 
 
-
   # 10. EC2 INSTANCES — PRIVATE APP TIER (2 instances, one per AZ)
-  #     No public IPs. Outbound internet via NAT Gateway only.
-  #     Accessible only via SSM Session Manager.
-
-
   # App Server — AZ 1
   AppServer1:
     Type: AWS::EC2::Instance
@@ -551,9 +526,7 @@ Resources:
           Value: AZ2
 
 
-
 # OUTPUTS — shown in CloudFormation console after stack creation
-
 
 Outputs:
 
