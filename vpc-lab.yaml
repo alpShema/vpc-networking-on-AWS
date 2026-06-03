@@ -218,13 +218,7 @@ Resources:
           Value: !Sub ${EnvironmentName}-public-rt
 
   # Route: all traffic (0.0.0.0/0) → Internet Gateway
-  PublicRoute:
-    Type: AWS::EC2::Route
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
+
 
   # Associate both public subnets with the public route table
   PublicSubnet1RouteTableAssociation:
@@ -233,11 +227,7 @@ Resources:
       SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
 
-  PublicSubnet2RouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnet2
-      RouteTableId: !Ref PublicRouteTable
+
 
   # --- Private Route Table AZ 1 ---
   PrivateRouteTable1:
@@ -263,13 +253,7 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable1
 
   # --- Private Route Table AZ 2 ---
-  PrivateRouteTable2:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName}-private-rt-az2
+
 
   # Route: all traffic → NAT Gateway in AZ 2
   PrivateRoute2:
